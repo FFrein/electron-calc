@@ -1,0 +1,111 @@
+<body>
+    <p id="input">0</p>
+    <p id="output">0</p>
+    <div id="btn-block">
+      <button onclick="addNum(1)">1</button>
+      <button onclick="addNum(2)">2</button>
+      <button onclick="addNum(3)">3</button>
+      <button onclick="addChar('*')" class="char">x</button>
+      <button onclick="addNum(4)">4</button>
+      <button onclick="addNum(5)">5</button>
+      <button onclick="addNum(6)">6</button>
+      <button onclick="addChar('+')" class="char">+</button>
+      <button onclick="addNum(7)">7</button>
+      <button onclick="addNum(8)">8</button>
+      <button onclick="addNum(9)">9</button>
+      <button onclick="addChar('-')" class="char">-</button>
+      <button onclick="clr()" class="clear">C</button>
+      <button onclick="addNum(0)">0</button>
+      <button onclick="calcInput()" class="calculate">=</button>
+      <button onclick="addChar('/')" class="char">/</button>
+    </div>
+  
+    <style>
+      body {
+        background-image: linear-gradient(#334c5e, 60%, #0c1216);
+        user-select: none;
+        margin: 0;
+      }
+      p {
+        text-align: right;
+        word-break: break-all;
+        font-family: Arial, Helvetica, sans-serif;
+        width: 88%;
+        padding: 3vh 8% 0 4%;
+      }
+      #input {
+        height: 12vh;
+        font-size: 10vh;
+        color: #ffffff;
+      }
+      #output {
+        height: 4vh;
+        font-size: 8vh;
+        color: #2fc45c;
+      }
+      #btn-block {
+        margin-left: 3%;
+      }
+      button {
+        width: 20%;
+        margin: 2%;
+        float: left;
+        font-size: 7vh;
+        background-color: rgba(0, 0, 0, 0);
+        color: #ffffff;
+        border-radius: 50%;
+        border: none;
+        outline: none;
+        padding: 2vh 0;
+      }
+      button:active {
+        background-color: #121b22;
+      }
+      .char {
+        background-color: #e66a31;
+      }
+      .calculate {
+        background-color: #269948;
+      }
+      .clear {
+        color: #e74141;
+      }
+    </style>
+  
+    <script>
+      // Теги
+      let input = window.document.querySelector('#input');
+      let output = window.document.querySelector('#output');
+      // Переменные
+      let isLastChar = false;
+      // Функции
+      const clr = () => {
+        input.innerText = '0';
+        output.innerText = '0';
+      }
+      const calcInput = () => {
+        input.innerText = output.innerText;
+      }
+      const calcOutput = () => {
+        output.innerText = eval(input.innerText);
+      }
+      const add = (value) => {
+        if(input.innerText.length <= 10){
+          if(input.innerText === '0') {
+            input.innerText = value;
+          }else{
+            input.innerText += value;
+          }
+        }
+      }
+      const addNum = (num) => {
+        add(num);
+        isLastChar = false;
+        calcOutput();
+      }
+      const addChar = (char) => {
+        if(!isLastChar) add(char);
+        isLastChar = true;
+      }
+    </script>
+  </body>

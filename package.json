@@ -1,0 +1,29 @@
+{
+  "name": "calculator",
+  "version": "1.0.0",
+  "description": "Calculator Electron App",
+  "main": "calculator.js",
+  "author": "FFrein",
+  "license": "ISC",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^30.0.1",
+    "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "electron-updater": "^6.1.8"
+  },
+
+  "build": {
+    "appId": "com.example.app",
+    "productName": "calculator app",
+    "win":{
+      "target":"nsis"
+    },
+    "directories":{
+      "output": "dist"
+    }
+  }
+}
