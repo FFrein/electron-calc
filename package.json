@@ -1,6 +1,6 @@
 {
   "name": "calculator",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Calculator Electron App",
   "main": "calculator.js",
   "author": "FFrein",
