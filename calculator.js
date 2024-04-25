@@ -1,36 +1,57 @@
-const {app, BrowserWindow} = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const { autoUpdater } = require('electron-updater');
 
-const createWindow = () => {
-  const win = new BrowserWindow({
+let win;
+function createWindow() {
+  win = new BrowserWindow({
     width: 300,
     height: 500,
-    icon: path.join(__dirname, 'icon.png'),
-    resizable: false
+    icon: 'icon.png',
+    resizable: false,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js') // Загрузка preload скрипта
+    }
   });
+
   win.setMenuBarVisibility(false);
   win.setTitle('Калькулятор');
   win.loadFile('calculator.html');
+
+  win.webContents.on('did-finish-load', () => {
+    win.show(); // Показываем окно только после полной загрузки
+    win.webContents.send('updateMessage', 'Checking for updates'); // Отправляем сообщение о проверке обновлений
+  });
+
+  // Обработка событий обновления
+  autoUpdater.autoDownload = false;
+
+  autoUpdater.on('update-available', (info) => {
+    win.webContents.send('updateMessage', `Update available. Current version ${app.getVersion()}`);
+    autoUpdater.downloadUpdate();
+  });
+
+  autoUpdater.on('update-not-available', (info) => {
+    win.webContents.send('updateMessage', `No update available. Current version ${app.getVersion()}`);
+  });
+
+  autoUpdater.on('update-downloaded', (info) => {
+    win.webContents.send('updateMessage', `Update downloaded. Current version ${app.getVersion()}`);
+  });
+
+  autoUpdater.on('error', (info) => {
+    win.webContents.send('updateMessage', info.toString());
+  });
+
+  win.on('closed', () => {
+    win = null;
+  });
 }
 
-app.whenReady().then(() =>{
-  createWindow()
-  
-  autoUpdater.checkForUpdates();
+app.on('ready', createWindow);
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
-app.on('window-all-closed', () => app.quit());
-
-//Код с функционалом автообновленеия
-const {autoUpdater, AppUpdater} = require('electron-updater');
-autoUpdater.autoDownload = false;
-autoUpdater.autoInstallOnAppQuit = true;
-
-//Упаковка с использование Builder
-//npm i electron-builder --save-dev
-//npm i electron-updater
-//добавляем build в package.json
-//
-//Настройка репозитория в гитхаб (Гайд индуса как по мне плох)
-
-//Git init
-//git add .
